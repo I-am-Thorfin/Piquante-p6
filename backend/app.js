@@ -1,23 +1,26 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const userRoutes = require('./routes/user');
 
 const app = express();
 
-app.use((req, res) => {
-   res.json({ message: 'Votre requête a bien été reçue !' }); 
+/* Correction de l'erreur de CORS */
+app.use((req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content, Accept, Content-Type, Authorization');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
+  next();
 });
 
-/* Correction de l'erreur de CORS */
 
-app.use((req, res, next) => {
-   res.setHeader('Access-Control-Allow-Origin', '*');
-   res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content, Accept, Content-Type, Authorization');
-   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
-   next();
- });
+ /*Partie Utilisateurs */
+ app.use(express.json()) //Pour formater le tout en json afin que le code soit lisible.
 
- /* Appel de Mongoose */
+//app.use('/api/sauce', sauceRoutes);
+app.use('/api/auth', userRoutes);
 
+
+/* Appel de Mongoose */
  mongoose.connect('mongodb+srv://Thorfin:MDPtest@clusterpiquante.g6rxl.mongodb.net/?retryWrites=true&w=majority',
   { useNewUrlParser: true,
     useUnifiedTopology: true })
