@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const userRoutes = require('./routes/user');
 const sauceRoutes = require('./routes/sauce');
+const path = require("path");
 
 const app = express();
 
@@ -16,7 +17,7 @@ app.use((req, res, next) => {
 
 app.use(express.json()) //Pour formater le tout en json afin que le code soit lisible.
 app.use('/api/auth', userRoutes); // Pour pointer vers la route User
-app.use('/api/sauce', sauceRoutes); // Pour pointer la route sauce
+app.use('/api/sauces', sauceRoutes); // Pour pointer la route sauce
 
 
 /* Appel de Mongoose */
