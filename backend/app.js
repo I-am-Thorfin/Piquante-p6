@@ -18,6 +18,7 @@ app.use((req, res, next) => {
 app.use(express.json()) //Pour formater le tout en json afin que le code soit lisible.
 app.use('/api/auth', userRoutes); // Pour pointer vers la route User
 app.use('/api/sauces', sauceRoutes); // Pour pointer la route sauce
+app.use("/images", express.static(path.join(__dirname, "images"))); // Pour faire fonctionner multer
 
 
 /* Appel de Mongoose */
