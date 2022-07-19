@@ -1,12 +1,13 @@
 const multer = require('multer');
 
-const MIME_TYPE = {
+const MIME_TYPES = {
 'image/jpg': 'jpg',
 'image/jpeg': 'jpeg',
 'image/png': 'png'
 };
 
 // Package de gestion de fichiers - Multer
+
 const storage = multer.diskStorage({
     destination: (req, file, callback) => {
         callback(null, 'images')

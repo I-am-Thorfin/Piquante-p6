@@ -1,4 +1,5 @@
 const Sauce = require('../models/sauce');
+const fs = require('fs')
 
 
 /* Obtention de toutes les sauces */
@@ -26,10 +27,30 @@ exports.createSauce = (req, res, next) => {
         ...sauceObject,
         imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
     });
-    sauce.save()
+    console.log("Sauce",req.body) 
+    sauce.save()      
         .then(() => res.status(201).json({ message: 'Sauce enregistré !' }))
         .catch(error => res.status(400).json({ error }))
-}
+};
+
+/* Modification d'une sauce */
+
+exports.modifySauce = (req, res, next) => {
+    const sauceObject = req.file ?
+        {
+            ...JSON.parse(req.body.sauce),
+            imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+        } : { ...req.body }
+    Sauce.updateOne({ _id: req.params.id }, { ...sauceObject, _id: req.params.id })
+        .then(() => res.status(200).json({ message: 'Sauce modifiée !' }))
+        .catch(error => res.status(400).json({ error }))
+};
+
+
+
+
+
+
 
 
 
