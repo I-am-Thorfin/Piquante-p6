@@ -36,31 +36,43 @@ exports.createSauce = (req, res, next) => {
 /* Modification d'une sauce */
 
 exports.modifySauce = (req, res, next) => {
-    const sauceObject = req.file ?
-        {
-            ...JSON.parse(req.body.sauce),
-            imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
-        } : { ...req.body }
-    Sauce.updateOne({ _id: req.params.id }, { ...sauceObject, _id: req.params.id })
-        .then(() => res.status(200).json({ message: 'Sauce modifiée !' }))
-        .catch(error => res.status(400).json({ error }))
-};
+    const sauceObject = req.file ? {
+      ...JSON.parse(req.body.sauce),
+      imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+  } : {...req.body };
+    Sauce.findOne({ _id: req.params.id })
+        .then(sauce => {
+          console.log(req.body.userId);
+          if (req.body.userId !== process.userId)  {
+            return res.status(403).json({message : 'Non autorisé'});
+          } else{
+  Sauce.updateOne({ _id: req.params.id }, {...sauceObject, _id: req.params.id })
+      .then(res.status(200).json({ message: "Sauce modifiée" }))
+      .catch(error => res.status(400).json({ error }))
+}
+  });
+}
 
 /* Suppression d'une sauce */
 
 exports.deleteSauce = (req, res, next) => {
-    Sauce.findOne({ _id: req.params.id })
+    const userId = req.body.userId;
+    Sauce.findOne({_id: req.params.id})
         .then(sauce => {
-            const filename = sauce.imageUrl.split('/images/')[1]
+          console.log(req.body.userId);
+          if (userId !== process.userId)  {
+            return res.status(403).json({message : 'Non autorisé'});
+          } else{
+            const filename = sauce.imageUrl.split('/images/')[1];
             fs.unlink(`images/${filename}`, () => {
-                Sauce.deleteOne({ _id: req.params.id })
-                    .then(() => res.status(200).json({ message: 'Sauce supprimée !' }))
-                    .catch(error => res.status(400).json({ error: error }))
+                Sauce.deleteOne({_id: req.params.id})
+                    .then(res.status(200).json({message: 'Objet supprimé !'}))
+                    .catch(error => res.status(400).json({error}));
             })
-        })
-        .catch(error => res.status(500).json({ error }))
-}
-
+        }
+      })
+        .catch(error => res.status(500).json({error}))
+  };
 
 
 /* Like et Dislike */
