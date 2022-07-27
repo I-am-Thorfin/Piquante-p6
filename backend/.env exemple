@@ -1,0 +1,6 @@
+SRV_PORT = 
+
+DB_USERNAME = ""
+DB_PASSWORD = ""
+
+AUTH_TOKEN_JWT = ""

@@ -3,8 +3,13 @@ const mongoose = require('mongoose');
 const userRoutes = require('./routes/user');
 const sauceRoutes = require('./routes/sauce');
 const path = require("path");
-
 const app = express();
+
+const dotenv = require("dotenv");
+console.log("FROM ./APP --- /DOTENV : ", dotenv);
+const result = dotenv.config();
+console.log("FROM ./APP --- RESULT : ", result);
+
 
 /* Correction de l'erreur de CORS */
 app.use((req, res, next) => {
@@ -21,8 +26,9 @@ app.use('/api/sauces', sauceRoutes); // Pour pointer la route sauce
 app.use('/images', express.static(path.join(__dirname, `images`))); // Pour faire fonctionner multer
 
 
+
 /* Appel de Mongoose */
- mongoose.connect('mongodb+srv://Thorfin:MDPtest@clusterpiquante.g6rxl.mongodb.net/?retryWrites=true&w=majority',
+ mongoose.connect(`mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@clusterpiquante.g6rxl.mongodb.net/?retryWrites=true&w=majority`,
   { useNewUrlParser: true,
     useUnifiedTopology: true })
   .then(() => console.log('Connexion à MongoDB réussie !'))
