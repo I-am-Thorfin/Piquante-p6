@@ -5,6 +5,9 @@ const sauceRoutes = require('./routes/sauce');
 const path = require("path");
 const app = express();
 
+const helmet = require('helmet');
+
+
 const dotenv = require("dotenv");
 console.log("FROM ./APP --- /DOTENV : ", dotenv);
 const result = dotenv.config();
@@ -18,6 +21,16 @@ app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
   next();
 });
+
+app.use(helmet());
+
+/* Fonction pour régler l'erreur causée par Helmer au niveau des images */
+app.use(function (req, res, next) {
+  res.setHeader('Cross-Origin-Resource-Policy', 'same-site')
+  next()
+})
+app.disable('x-powered-by');
+
 
 
 app.use(express.json()) //Pour formater le tout en json afin que le code soit lisible.

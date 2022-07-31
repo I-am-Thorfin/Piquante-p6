@@ -7,7 +7,7 @@ const cryptojs = require("crypto-js");
 
 
 exports.signup = (req, res, next) => {
-    // crypto-js pour cry^ter notre mail
+    // crypto-js pour crypter notre mail
     const emailCryptoJs = cryptojs
     .HmacSHA256(req.body.email, `${process.env.CRYPTOJS_KEY_FOR_EMAIL}`)
     .toString();
@@ -16,7 +16,7 @@ exports.signup = (req, res, next) => {
     bcrypt.hash(req.body.password, 10)
       .then(hash => {
         const user = new User({
-          email: emailCryptoJs,
+          email: emailCryptoJs,  // On remplace notre mail d'origine par la version cryptée
           password: hash
         });
         user.save()
